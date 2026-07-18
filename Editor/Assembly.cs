@@ -14,7 +14,5 @@ global using System.ComponentModel;
 global using System.Reflection;
 global using System.Diagnostics;
 global using Editor.NodeEditor;
-global using Editor.ShaderGraphExtras;
-global using Editor.ShaderGraphExtras.Nodes;
 global using Sandbox.Resources;
 global using System.Text.Json.Nodes;
