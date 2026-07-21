@@ -83,18 +83,15 @@ public sealed partial class CharacterControllerUtility : Component, Component.IN
         if ( !string.IsNullOrEmpty( _appliedTag ) )
             GameObject.Tags.Remove( _appliedTag );
 
-        // Another component may have already stamped this exact Steam ID tag (e.g. a
-        // duplicate tagger, or this one re-running after a hot reload) - don't add it
-        // or the collision-ignore rule twice, but still make sure the ragdoll bones
-        // (which that other component may not know about) are covered.
-        bool alreadyTagged = GameObject.Tags.Has( tag );
-
-        if ( !alreadyTagged )
-        {
+        // The tag itself replicates over the network (it's GameObject state), so a
+        // joining client can see it already applied from the snapshot - but the
+        // collision-ignore rule lives in this machine's own PhysicsWorld, which is
+        // NOT networked. So only skip re-adding the tag; always (re)register the
+        // rule locally, or clients would collide with their own ragdoll forever.
+        if ( !GameObject.Tags.Has( tag ) )
             GameObject.Tags.Add( tag );
-            IgnoreSelfCollision( tag );
-        }
 
+        IgnoreSelfCollision( tag );
         TagColliders( tag );
 
         _appliedTag = tag;
