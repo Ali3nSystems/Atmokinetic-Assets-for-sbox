@@ -86,85 +86,6 @@
       ]
     },
     {
-      "__guid": "b502451c-ecec-4795-ba85-6f768c2118dc",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "Network",
-      "Position": "0,0,0",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [],
-      "Children": [
-        {
-          "__guid": "cb009681-01dc-4020-834a-6863877ee575",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "Network Helper",
-          "Position": "0,0,0",
-          "Rotation": "0,0,0,1",
-          "Scale": "1,1,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Sandbox.NetworkHelper",
-              "__guid": "7b21daba-17f7-4392-9902-a85815cd579d",
-              "__enabled": true,
-              "Flags": 0,
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "PlayerPrefab": {
-                "_type": "gameobject",
-                "prefab": "prefabs/prfb-player.prefab"
-              },
-              "SpawnPoints": [
-                {
-                  "_type": "gameobject",
-                  "go": "7d61dae2-7a2a-4e3a-bf20-6eb063758827"
-                }
-              ],
-              "StartServer": true
-            }
-          ],
-          "Children": []
-        },
-        {
-          "__guid": "7d61dae2-7a2a-4e3a-bf20-6eb063758827",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "Spawn Point #1",
-          "Position": "-908.237366,-4854.06836,-246.713364",
-          "Rotation": "0,0,0,1",
-          "Scale": "1,1,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [],
-          "Children": []
-        }
-      ]
-    },
-    {
       "__guid": "7b0ce856-d9bc-47b0-be99-581128064a41",
       "__version": 2,
       "Flags": 0,
@@ -1089,6 +1010,41 @@
           "Children": []
         }
       ]
+    },
+    {
+      "__guid": "6d59d5ca-a024-4088-86bb-c10e19d25970",
+      "__version": 2,
+      "__Prefab": "prefabs/prfb-player.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "7c991dfe-38c3-4d19-9317-3e835f88c3eb"
+            },
+            "Property": "Position",
+            "Value": "-923.526489,-4842.85986,-268.243317"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "7c991dfe-38c3-4d19-9317-3e835f88c3eb": "6d59d5ca-a024-4088-86bb-c10e19d25970",
+        "1b7f56d5-1410-4f83-a1ac-26bbf129ce0f": "25a6d3ef-a43d-42e0-8077-059617a36040",
+        "a5d3f614-057c-427f-b0cc-f6757b3d61b5": "9499db1c-653a-494e-84d3-2712550ffa37",
+        "1cc8b375-0b46-4dc9-914b-daebfabfa9d0": "47f04a8b-f9a0-45a5-b392-676c23536aa3",
+        "0eeaf6aa-1b43-4a21-8992-ef03d1b046f8": "385b7426-d093-4c89-af79-7cc3dfaa8151",
+        "27bdf109-b38c-4645-97e5-268a50995f4a": "af50dcb8-5366-4911-af83-ed369dc24fdf",
+        "65dbfdd8-719f-400b-94fa-dcf2a360919e": "e0461959-9d01-41bc-8ef3-5a2985049917",
+        "8d932b44-ed0b-431d-b8a6-bb39873d079b": "7804a61d-1bd9-4a0c-8c61-056db8591f56",
+        "eb5fea5b-a678-40b9-82f6-766fdd12a6bf": "5988fec1-244e-41c2-a68d-0f8eb45b2488",
+        "3616b314-5b77-4db9-92df-fa9e510c5c54": "0effe947-a70e-41ea-a09b-0d1d9361d4e5",
+        "7962e53d-079f-485d-8b4a-a7d0abfbffd1": "37219757-253d-4388-8382-791b7bc9a9cf",
+        "219db0e4-150b-4673-8cfd-bed46c0ca566": "56f28af9-bf3d-4f45-a57f-c8653377feca",
+        "c7ffdf0c-36e8-4db8-9f9b-034bced54e1a": "984c06cf-26ee-4ad7-86e4-8e0685b04e16"
+      }
     }
   ],
   "SceneProperties": {
