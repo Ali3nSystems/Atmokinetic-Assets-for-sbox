@@ -17,9 +17,7 @@ code/Properties/*
 .sbox/*
 *.generated.*
 *.*_c
-*.shader
 *.shader_c
-*.vmat
 *.los
 *.vpk
 *launchSettings.json
