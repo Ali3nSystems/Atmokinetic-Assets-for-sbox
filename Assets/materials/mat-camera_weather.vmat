@@ -1,0 +1,24 @@
+// THIS FILE IS AUTO-GENERATED
+
+Layer0
+{
+	shader "shaders/shdr-camera_weather.shader"
+
+	RainDripsTexture "textures/tex-rain-drips@1-1-1-r-12x12-normal,height,temporal.png"
+
+	//---- Under Water ----
+	g_flUnderWaterBlurDirections "16.000"
+	g_flUnderWaterBlurQuality "4.000"
+	g_flUnderWaterBlurTaps "1.000"
+
+	//---- Water Line ----
+	g_flWaterLineBlurDirections "16.000"
+	g_flWaterLineBlurQuality "4.000"
+	g_flWaterLineBlurTaps "1.000"
+
+	//---- Weather ----
+	g_flRainDropsScale "2.500"
+	g_flRainDropsSpeed "0.500"
+	g_flRainDropsStrength "1.000"
+	RainDrops "textures/tex-rain-drops@1-1-1-r-12x12-normal,height,temporal.png"
+}
