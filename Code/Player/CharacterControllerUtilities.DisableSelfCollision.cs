@@ -2,12 +2,12 @@ using Sandbox.Physics;
 
 namespace AtmokineticAssets;
 
-[Title( "Atmokinetic Assets - Character Controller Utility" )]
+[Title( "Atmokinetic Assets - Character Controller Utilities" )]
 [Category( "Atmokinetic Assets" )]
 [Icon( "badge" )]
 
 
-public sealed partial class CharacterControllerUtility : Component, Component.INetworkSpawn
+public sealed partial class CharacterControllerUtilities : Component, Component.INetworkSpawn
 {
     /// <summary>
     /// THIS IS PRIMARILY USED FOR THE MODELPHYISICS TO GENERATE WATER SIMULATIONS/RIPPLES
