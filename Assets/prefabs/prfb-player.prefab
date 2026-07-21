@@ -195,8 +195,8 @@
         "WorkshopItems": []
       },
       {
-        "__type": "AtmokineticAssets.CharacterController",
-        "__guid": "c81e80fc-46d9-4e2c-bd38-f3349e81e239",
+        "__type": "AtmokineticAssets.CharacterControllerUtility",
+        "__guid": "8d932b44-ed0b-431d-b8a6-bb39873d079b",
         "__enabled": true,
         "Flags": 0,
         "OnComponentDestroy": null,
