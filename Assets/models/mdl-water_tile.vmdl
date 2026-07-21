@@ -1,0 +1,336 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:modeldoc30:version{8c2d7a91-9c42-4bf0-883a-5a3b1762d4f1} -->
+{
+	rootNode = 
+	{
+		_class = "RootNode"
+		children = 
+		[
+			{
+				_class = "MaterialGroupList"
+				children = 
+				[
+					{
+						_class = "DefaultMaterialGroup"
+						remaps = 
+						[
+							{
+								from = "default.vmat"
+								to = "materials/mat-water.vmat"
+							},
+						]
+						use_global_default = false
+						global_default_material = "waterdisplacement.vmat"
+					},
+				]
+			},
+			{
+				_class = "RenderMeshList"
+				children = 
+				[
+					{
+						_class = "RenderMeshFile"
+						name = "subdivided_0_underwater"
+						filename = "models/obj-water_tile.obj"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"MESH_water_tile_0_water_line",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "subdivided_0"
+						filename = "models/obj-water_tile.obj"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"subdiv_0",
+								"subdivided_0",
+								"Plane",
+								"MESH_water_tile_0",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "subdivided_1_end"
+						filename = "models/obj-water_tile.obj"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"subdiv_1_corner",
+								"subdivided_1_end",
+								"MESH_water_tile_1_end",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "subdivided_1_corner"
+						filename = "models/obj-water_tile.obj"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"subdiv_1_corner",
+								"subdivided_1_corner",
+								"MESH_water_tile_1_corner",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "subdivided_2_end"
+						filename = "models/obj-water_tile.obj"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"subdiv_3",
+								"subdivided_2_end",
+								"MESH_water_tile_2_end",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "subdivided_2_corner"
+						filename = "models/obj-water_tile.obj"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"subdiv_2_corner",
+								"subdivided_2_corner",
+								"MESH_water_tile_2_corner",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "subdivided_3_end"
+						filename = "models/obj-water_tile.obj"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"subdiv_3",
+								"subdivided_3_end",
+								"MESH_water_tile_3_end",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "subdivided_3_corner"
+						filename = "models/obj-water_tile.obj"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"subdiv_2_corner",
+								"subdivided_3_corner",
+								"MESH_water_tile_3_corner",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "subdivided_4"
+						filename = "models/obj-water_tile.obj"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"subdiv_2",
+								"subdivided_4",
+								"MESH_water_tile_4",
+							]
+						}
+					},
+				]
+			},
+			{
+				_class = "ModelModifierList"
+				children = 
+				[
+					{
+						_class = "ModelModifier_ScaleAndMirror"
+						scale = 0.393701
+						mirror_x = false
+						mirror_y = false
+						mirror_z = false
+						flip_bone_forward = false
+						swap_left_and_right_bones = false
+					},
+				]
+			},
+			{
+				_class = "BodyGroupList"
+				children = 
+				[
+					{
+						_class = "BodyGroup"
+						name = "subdivision"
+						children = 
+						[
+							{
+								_class = "BodyGroupChoice"
+								name = "subdivided_0_underwater"
+								meshes = 
+								[
+									"subdivided_0_underwater",
+								]
+							},
+							{
+								_class = "BodyGroupChoice"
+								name = "subdivided_0"
+								meshes = 
+								[
+									"subdivided_0",
+								]
+							},
+							{
+								_class = "BodyGroupChoice"
+								name = "subdivided_1_end"
+								meshes = 
+								[
+									"subdivided_1_end",
+								]
+							},
+							{
+								_class = "BodyGroupChoice"
+								name = "subdivided_1_corner"
+								meshes = 
+								[
+									"subdivided_1_corner",
+								]
+							},
+							{
+								_class = "BodyGroupChoice"
+								name = "subdivided_2_end"
+								meshes = 
+								[
+									"subdivided_2_end",
+								]
+							},
+							{
+								_class = "BodyGroupChoice"
+								name = "subdivided_2_corner"
+								meshes = 
+								[
+									"subdivided_2_corner",
+								]
+							},
+							{
+								_class = "BodyGroupChoice"
+								name = "subdivided_3_end"
+								meshes = 
+								[
+									"subdivided_3_end",
+								]
+							},
+							{
+								_class = "BodyGroupChoice"
+								name = "subdivided_3_corner"
+								meshes = 
+								[
+									"subdivided_3_corner",
+								]
+							},
+							{
+								_class = "BodyGroupChoice"
+								name = "subdivided_4"
+								meshes = 
+								[
+									"subdivided_4",
+								]
+							},
+						]
+						hidden_in_tools = false
+					},
+				]
+			},
+		]
+		model_archetype = ""
+		primary_associated_entity = ""
+		anim_graph_name = ""
+		base_model_name = ""
+	}
+}
