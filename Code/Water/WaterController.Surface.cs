@@ -50,7 +50,7 @@ public sealed partial class WaterController : Component, Component.ExecuteInEdit
 	// Texture A
 	[Property, Feature("Attributes"), Group("Water Ripples A"), Title("Texture A"), Order(10)]
 	[Sync]
-	public Texture WaterRipplesTextureA { get; set { field = value; _surfaceAttributesDirty = true; } } = Texture.Load("textures/tex-water_ripples.vtex");
+	public Texture WaterRipplesTextureA { get; set { field = value; _surfaceAttributesDirty = true; } } = Texture.Load("textures/tex-water_ripples_1.vtex");
 
 	[Property, Feature("Attributes"), Group("Water Ripples A"), Title("Scale A"), Order(11)]
 	[Sync]
@@ -75,7 +75,7 @@ public sealed partial class WaterController : Component, Component.ExecuteInEdit
 	// Texture B
 	[Property, Feature("Attributes"), Group("Water Ripples B"), Title("Texture B"), Order(16)]
 	[Sync]
-	public Texture WaterRipplesTextureB { get; set { field = value; _surfaceAttributesDirty = true; } } = Texture.Load("textures/tex-water_ripples.vtex");
+	public Texture WaterRipplesTextureB { get; set { field = value; _surfaceAttributesDirty = true; } } = Texture.Load("textures/tex-water_ripples_2.vtex");
 
 	[Property, Feature("Attributes"), Group("Water Ripples B"), Title("Scale B"), Order(17)]
 	[Sync]
