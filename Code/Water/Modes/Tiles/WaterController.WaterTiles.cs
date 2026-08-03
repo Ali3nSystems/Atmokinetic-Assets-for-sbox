@@ -108,7 +108,7 @@ public sealed partial class WaterController: Component, Component.ITriggerListen
 		var b = GetWorldBounds();
 		return point.x >= b.Mins.x && point.x <= b.Maxs.x &&
 			   point.y >= b.Mins.y && point.y <= b.Maxs.y &&
-			   point.z < GetWaterSurfaceZ() + ripples.Count && point.z >= b.Mins.z;
+			   point.z < GetWaterSurfaceZWithOffset() && point.z >= b.Mins.z;
 	}
 
 	public bool IsPointFullySubmerged( Vector3 point )
