@@ -24,12 +24,12 @@ public sealed partial class CameraController : BasePostProcess<CameraController>
 
 	public override void Render()
 	{
-		if (WaterLineCameraComponent.IsValid())
+		if (_waterLineRenderingActive && WaterLineCameraComponent.IsValid())
 		{
 			RenderWaterLineTexture();
 		}
 
-		if (WaterController.IsValid())
+		if (WaterController.IsValid() || _usingFallbackWater)
 		{
 			UnderWaterShaderAttributes();
 			// WaterDripsShaderAttributes();
