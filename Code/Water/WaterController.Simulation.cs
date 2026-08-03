@@ -30,6 +30,21 @@ public sealed partial class WaterController : Component, Component.ITriggerListe
 	[Sync]
 	public float WaterSimulationSpawnInterval { get; set; } = 0.1f;
 
+	/// <summary>
+	/// For colliders we want to ignore & not ripple from
+	/// </summary>
+	[Property, Feature("Simulation"), Group("Spawn"), Title("Ignore Tags")]
+	[Sync]
+	public TagSet WaterSimulationIgnoreTags { get; set; } = [];
+
+	/// <summary>
+	/// Hard ceiling for active simulated ripples. Since the shader loops over every active
+	/// ripple per vertex & pixel, this keeps rendering cost bounded if needed
+	/// </summary>
+	[Property, Feature("Simulation"), Group("Spawn"), Title("Maximum Active Ripples"), Range(1, 128)]
+	[Sync]
+	public int WaterSimulationMaximumActiveRipples { get; set; } = 32;
+
 	[Property, Feature("Simulation"), Group("Duration"), Title("Fade In Time (s)")]
 	[Sync]
 	public float WaterSimulationFadeInTime { get; set; } = 0.25f;
@@ -55,7 +70,7 @@ public sealed partial class WaterController : Component, Component.ITriggerListe
 		public float Progress;
 	}
 
-	public class RippleData
+	public struct RippleData
 	{
 		public float SpawnTime;
 		public float InitialRadius;
@@ -72,18 +87,24 @@ public sealed partial class WaterController : Component, Component.ITriggerListe
 	private int currentBufferSize = 0;
 	private readonly HashSet<Collider> trackedColliders = new();
 	private readonly Dictionary<Rigidbody, TimeSince> lastRippleTime = new();
+	private readonly Dictionary<ModelPhysics, TimeSince> lastModelRippleTime = new();
 
-	// Reused per frame instead of allocating a new list every update.
+	// Reused per frame instead of allocating a new list every update
 	private readonly List<Collider> _collidersToRemove = new();
+	private readonly HashSet<ModelPhysics> _processedModelPhysics = new();
 
-	// Renderers the ripple attributes are stamped onto (tiles + waterline children),
-	// cached so the per-frame path never walks the descendant hierarchy. Rebuilt when
-	// the tile or waterline set changes.
+	// List of renderers the ripple attributes are stamped onto (tiles + waterline children).
+	// Cached so the per frame path doesn't walk the descendant hierarchy, rebuilt when the
+	// tile or waterline set changes
 	private readonly List<ModelRenderer> _rippleRenderers = new();
 	private bool _rippleRenderersDirty = true;
 	private int _lastStampedRippleCount = -1;
 
-	private void MarkRippleRenderersDirty() => _rippleRenderersDirty = true;
+	private void MarkRippleRenderersDirty()
+	{
+		_rippleRenderersDirty = true;
+		MarkLocalizedSurfaceTintRenderersDirty();
+	}
 
 	private void RebuildRippleRendererCache()
 	{
@@ -117,7 +138,7 @@ public sealed partial class WaterController : Component, Component.ITriggerListe
 
 	private void UpdateWaterSimulation()
 	{
-		// Need a TargetRenderer or the main GameObject as the tile creator.
+		// Need a TargetRenderer or the main GameObject as the tile creator
 		bool hasTarget = TargetRenderer?.SceneObject != null;
 
 		if ((!hasTarget && !GameObject.IsValid()) || rippleBuffer == null)
@@ -130,38 +151,42 @@ public sealed partial class WaterController : Component, Component.ITriggerListe
 		var triggerBounds = triggerCollider.GetWorldBounds();
 		var triggerTop = triggerBounds.Maxs.z;
 
-		// Ripples are purely cosmetic, so every client detects splashes locally from
-		// the replicated physics - no RPC needed, no network traffic, and proxies'
-		// splashes appear because their trigger events and velocity replicate.
-		_collidersToRemove.Clear();
-
-		foreach (var collider in trackedColliders)
+		// Detect physical contacts once on the host, then broadcast the cosmetic
+		// ripple so every peer renders the same event (so peers aren't all broadcasting the
+		// same ripple to each other)
+		if (Networking.IsHost)
 		{
-			if (collider == null || !collider.IsValid)
-			{
-				_collidersToRemove.Add(collider);
-				continue;
-			}
+			_collidersToRemove.Clear();
+			_processedModelPhysics.Clear();
 
-			var modelPhysics = collider.GameObject.Components.GetInAncestorsOrSelf<ModelPhysics>();
-
-			if (modelPhysics != null)
+			foreach (var collider in trackedColliders)
 			{
-				ProcessModelPhysics(modelPhysics, triggerTop);
-			}
-			else
-			{
-				var rigidbody = collider.GameObject.Components.Get<Rigidbody>();
-				if (rigidbody != null)
+				if (collider == null || !collider.IsValid)
 				{
-					ProcessRigidbody(rigidbody, collider, triggerTop);
+					_collidersToRemove.Add(collider);
+					continue;
+				}
+
+				if (!WaterSimulationIgnoreTags.IsEmpty && collider.GameObject.Tags.HasAny(WaterSimulationIgnoreTags))
+					continue;
+
+				var modelPhysics = collider.GameObject.Components.GetInAncestorsOrSelf<ModelPhysics>();
+
+				if (modelPhysics != null)
+				{
+					if (_processedModelPhysics.Add(modelPhysics))
+						ProcessModelPhysics(modelPhysics, triggerTop);
+				}
+				else
+				{
+					var rigidbody = collider.GameObject.Components.Get<Rigidbody>();
+					if (rigidbody != null)
+						ProcessRigidbody(rigidbody, collider, triggerTop);
 				}
 			}
-		}
 
-		foreach (var collider in _collidersToRemove)
-		{
-			trackedColliders.Remove(collider);
+			foreach (var collider in _collidersToRemove)
+				trackedColliders.Remove(collider);
 		}
 
 		UpdateRipples();
@@ -170,13 +195,18 @@ public sealed partial class WaterController : Component, Component.ITriggerListe
 
 	private void ProcessModelPhysics(ModelPhysics modelPhysics, float triggerTop)
 	{
+		if (lastModelRippleTime.TryGetValue(modelPhysics, out var timeSince) && timeSince < WaterSimulationSpawnInterval)
+			return;
+
+		float totalMass = 0f;
+		Vector3 weightedContactPoint = Vector3.Zero;
+		float weightedContactRadius = 0f;
+		float weightedVelocityKmh = 0f;
+
 		foreach (var body in modelPhysics.Bodies)
 		{
 			var rb = body.Component;
 			if (!rb.IsValid())
-				continue;
-
-			if (lastRippleTime.TryGetValue(rb, out var timeSince) && timeSince < WaterSimulationSpawnInterval)
 				continue;
 
 			var physicsBody = rb.PhysicsBody;
@@ -195,10 +225,24 @@ public sealed partial class WaterController : Component, Component.ITriggerListe
 
 			var contactPoint = GetContactPoint(bodyBounds, triggerTop);
 			var contactRadius = CalculateContactRadius(bodyBounds);
+			float bodyMass = physicsBody.Mass;
+			if (!float.IsFinite(bodyMass) || bodyMass <= 0f)
+				bodyMass = 1f;
 
-			CreateRipple(contactPoint, contactRadius, velocityKmh);
-			lastRippleTime[rb] = 0;
+			totalMass += bodyMass;
+			weightedContactPoint += contactPoint * bodyMass;
+			weightedContactRadius += contactRadius * bodyMass;
+			weightedVelocityKmh += velocityKmh * bodyMass;
 		}
+
+		if (totalMass <= 0f)
+			return;
+
+		CreateRipple(
+			weightedContactPoint / totalMass,
+			weightedContactRadius / totalMass,
+			weightedVelocityKmh / totalMass);
+		lastModelRippleTime[modelPhysics] = 0;
 	}
 
 	private void ProcessRigidbody(Rigidbody rb, Collider collider, float triggerTop)
@@ -239,9 +283,21 @@ public sealed partial class WaterController : Component, Component.ITriggerListe
 		return horizontalSize / 2f;
 	}
 
-	[Rpc.Broadcast]
+	[Rpc.Broadcast(NetFlags.HostOnly | NetFlags.Unreliable | NetFlags.DiscardOnDelay)]
 	private void CreateRipple(Vector3 position, float contactRadius, float velocityKmh)
 	{
+		AddRipple(position, contactRadius, velocityKmh);
+	}
+
+	private void AddRipple(Vector3 position, float contactRadius, float velocityKmh)
+	{
+		int maximumActiveRipples = GetMaximumActiveRipples();
+		if (ripples.Count >= maximumActiveRipples)
+			return;
+
+		contactRadius = MathF.Max(contactRadius, 0.01f);
+		velocityKmh = MathF.Max(velocityKmh, 0f);
+
 		float velocityScale = velocityKmh * WaterSimulationVelocityMultiplier;
 		float rotation = Random.Shared.NextSingle() * MathF.PI * 2f;
 
@@ -268,6 +324,8 @@ public sealed partial class WaterController : Component, Component.ITriggerListe
 
 	private void UpdateRipples()
 	{
+		TrimRipplesToMaximum();
+
 		float totalLifetime = WaterSimulationFadeInTime + WaterSimulationConstantTime + WaterSimulationFadeOutTime;
 
 		for (int i = ripples.Count - 1; i >= 0; i--)
@@ -320,32 +378,49 @@ public sealed partial class WaterController : Component, Component.ITriggerListe
 		}
 	}
 
-	//[Rpc.Broadcast]
+	private int GetMaximumActiveRipples()
+	{
+		return Math.Clamp(WaterSimulationMaximumActiveRipples, 1, 128);
+	}
+
+	private int FindOldestRippleIndex()
+	{
+		int oldestIndex = 0;
+		float oldestSpawnTime = rippleData[0].SpawnTime;
+
+		for (int i = 1; i < rippleData.Count; i++)
+		{
+			if (rippleData[i].SpawnTime >= oldestSpawnTime)
+				continue;
+
+			oldestSpawnTime = rippleData[i].SpawnTime;
+			oldestIndex = i;
+		}
+
+		return oldestIndex;
+	}
+
+	private void TrimRipplesToMaximum()
+	{
+		int maximumActiveRipples = GetMaximumActiveRipples();
+		while (ripples.Count > maximumActiveRipples)
+		{
+			int oldestIndex = FindOldestRippleIndex();
+			ripples.RemoveAt(oldestIndex);
+			rippleData.RemoveAt(oldestIndex);
+		}
+	}
+
 	private void UpdateBuffer()
 	{
-		// Track ripple count with geometric growth and hysteresis shrink, so long
-		// sessions of continuous movement don't reallocate the buffer every time a
-		// ripple spawns or expires - grows by doubling, shrinks by halving only once
-		// the count falls to a quarter of capacity.
-		int desiredSize = currentBufferSize;
-
-		if (ripples.Count > currentBufferSize)
-			desiredSize = Math.Max(ripples.Count, currentBufferSize * 2);
-		else if (currentBufferSize > 1 && ripples.Count <= currentBufferSize / 4)
-			desiredSize = Math.Max(1, currentBufferSize / 2);
-
-		bool bufferRecreated = desiredSize != currentBufferSize;
+		int desiredSize = GetMaximumActiveRipples();
+		bool bufferRecreated = rippleBuffer == null || desiredSize != currentBufferSize;
 
 		if (bufferRecreated)
 		{
 			rippleBuffer?.Dispose();
 			rippleBuffer = new GpuBuffer<WaterSimulation>(desiredSize);
 			currentBufferSize = desiredSize;
-
-			// Zero freshly allocated buffers we won't fill below, so no stale
-			// ripple data lingers on the GPU.
-			if (ripples.Count == 0)
-				rippleBuffer.SetData(new WaterSimulation[desiredSize]);
 		}
 
 		if (ripples.Count > 0)
@@ -353,9 +428,9 @@ public sealed partial class WaterController : Component, Component.ITriggerListe
 			rippleBuffer.SetData(ripples);
 		}
 
-		// Idle water needs no stamping - only push attributes while ripples are live,
+		// Idle water doesn't need stamping, only push attributes while ripples are live,
 		// when the count changes, or when the buffer object itself was recreated
-		// (renderers would otherwise reference the disposed buffer).
+		// (renderers would otherwise reference the disposed buffer)
 		if (ripples.Count == 0 && _lastStampedRippleCount == 0 && !bufferRecreated)
 			return;
 

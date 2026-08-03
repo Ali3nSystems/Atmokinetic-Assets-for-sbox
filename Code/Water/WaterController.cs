@@ -24,8 +24,9 @@ public sealed partial class WaterController : Component, Component.ExecuteInEdit
 	{
 		CreateWaterReflectionPlanarCamera();
 	
-		rippleBuffer = new GpuBuffer<WaterSimulation>(1);
-		currentBufferSize = 1;
+		currentBufferSize = GetMaximumActiveRipples();
+		rippleBuffer = new GpuBuffer<WaterSimulation>(currentBufferSize);
+		InitializeLocalizedSurfaceTints();
 	}
 
 	protected override void OnStart()
@@ -70,6 +71,7 @@ public sealed partial class WaterController : Component, Component.ExecuteInEdit
 		UpdateRings();
 		UpdateWaterSimulation();
 		WaterSurfaceAttributes();
+		UpdateLocalizedSurfaceTints();
 		
 		// Culling changes as the camera moves, so the tiles' reflection mode has to
 		// keep up - a fully culled water falls back to the cubemap. Only push to the
@@ -82,6 +84,7 @@ public sealed partial class WaterController : Component, Component.ExecuteInEdit
 	protected override void OnDestroy()
 	{
 		rippleBuffer?.Dispose();
+		DisposeLocalizedSurfaceTints();
 	}
 
 	protected override void DrawGizmos()
