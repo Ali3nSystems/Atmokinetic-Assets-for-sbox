@@ -100,6 +100,7 @@ public sealed partial class WaterController : Component, Component.ExecuteInEdit
 	// Starts dirty so the first WaterSurfaceAttributes call always pushes.
 	private bool _surfaceAttributesDirty = true;
 
+	[Rpc.Broadcast]
 	public void WaterSurfaceAttributes()
 	{
 		if ( !_surfaceAttributesDirty )
