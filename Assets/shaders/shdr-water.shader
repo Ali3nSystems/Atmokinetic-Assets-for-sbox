@@ -262,6 +262,75 @@ PS
 	float g_flWaterReflectionDistance < Attribute( "Water Reflection Distance" ); Default1( 4 ); >;
 	float2 g_vWaterReflectionThreshold < Attribute( "Water Reflection Threshold" ); Default2( 0,0.5 ); >;
 	float g_flWaterShorelineFade < Attribute( "Water Shoreline Fade" ); Default1( 4 ); >;
+
+			struct WaterSurfaceTint
+			{
+				float3 Position;
+				float StartTime;
+				float InitialRadius;
+				float MaximumRadius;
+				float GrowthDuration;
+				float FadeInDuration;
+				float Strength;
+				float Feather;
+				float DiffusionDelay;
+				float DiffusionDuration;
+				float DiffusionExpansion;
+				float GlobalStrength;
+				float RippleAgeOffset;
+			};
+
+			StructuredBuffer<WaterSurfaceTint> WaterSurfaceTintBuffer < Attribute( "WaterSurfaceTintBuffer" ); >;
+			int g_iWaterSurfaceTintCount < Attribute( "WaterSurfaceTintCount" ); Default( 0 ); >;
+			float4 g_vWaterSurfaceTintColor < Attribute( "Water Surface Tint Color" ); Default4( 0.49, 0.03, 0.07, 1.0 ); >;
+			float g_flWaterSurfaceTintEdgeVariation < Attribute( "Water Surface Tint Edge Variation" ); Default1( 0.12 ); >;
+			float g_flWaterSurfaceTintMaximumGlobalStrength < Attribute( "Water Surface Tint Maximum Global Strength" ); Default1( 0.2 ); >;
+
+			float2 WaterSurfaceTintFunction( float3 coordinates, float surfaceNoise, int tintCount )
+			{
+				float strongestInfluence = 0.0;
+				float diffusedGlobalInfluence = 0.0;
+
+				[loop]
+				for ( int tintIndex = 0; tintIndex < tintCount; tintIndex++ )
+				{
+					WaterSurfaceTint tint = WaterSurfaceTintBuffer[tintIndex];
+					float ordinaryAge = max( g_flTime - tint.StartTime, 0.0 );
+					float diffusionAge = ordinaryAge + max( tint.RippleAgeOffset, 0.0 );
+					float growth = saturate( ordinaryAge / max( tint.GrowthDuration, 0.001 ) );
+					growth = growth * growth * (3.0 - 2.0 * growth);
+					float fadeIn = saturate( ordinaryAge / max( tint.FadeInDuration, 0.001 ) );
+					fadeIn = fadeIn * fadeIn * (3.0 - 2.0 * fadeIn);
+					float diffusion = saturate( (diffusionAge - max( tint.DiffusionDelay, 0.0 )) / max( tint.DiffusionDuration, 0.001 ) );
+					float globalEnvelope = 4.0 * diffusion * (1.0 - diffusion);
+
+					diffusedGlobalInfluence += max( tint.GlobalStrength, 0.0 ) * globalEnvelope;
+
+					float edgeVariation = saturate( g_flWaterSurfaceTintEdgeVariation
+						+ diffusion * (1.0 - saturate( g_flWaterSurfaceTintEdgeVariation )) * 0.65 );
+					float radiusScale = lerp( 1.0 - edgeVariation, 1.0 + edgeVariation, surfaceNoise );
+					float diffusionExpansion = lerp( 1.0, max( tint.DiffusionExpansion, 1.0 ), diffusion );
+
+					float radius = lerp( tint.InitialRadius, tint.MaximumRadius, growth ) * diffusionExpansion * radiusScale;
+					float localStrength = tint.Strength * fadeIn * (1.0 - diffusion);
+					if ( radius <= 0.01 || localStrength <= 0.001 )
+						continue;
+
+					float2 offset = coordinates.xy - tint.Position.xy;
+					float normalizedDistanceSquared = dot( offset, offset ) / (radius * radius);
+					if ( normalizedDistanceSquared >= 1.0 )
+						continue;
+
+					float feather = lerp( saturate( tint.Feather ), 1.0, diffusion );
+					float innerRadius = 1.0 - feather;
+					float influence = 1.0 - smoothstep( innerRadius * innerRadius, 1.0, normalizedDistanceSquared );
+					strongestInfluence = max( strongestInfluence, influence * localStrength );
+				}
+
+				float globalInfluence = min( saturate( diffusedGlobalInfluence ), saturate( g_flWaterSurfaceTintMaximumGlobalStrength ) );
+				return float2( saturate( strongestInfluence ), globalInfluence );
+			}
+
 		
 			float3 SGERotateAboutAxisDegrees( float3 coordinates, float3 axis, float rotation )
 			{
@@ -538,7 +607,16 @@ PS
 		float l_130 = l_116 * l_129;
 		float l_131 = lerp( l_130, 1, l_114 );
 		
-		m.Albedo = l_115.xyz;
+		// Reuse the variation already sampled for the animated surface normals so
+		// tint edges do not require another texture lookup.
+		float surfaceTintNoise = saturate( (l_10.x + l_29.y) * 0.5 );
+		float2 surfaceTintInfluences = WaterSurfaceTintFunction( l_1, surfaceTintNoise, g_iWaterSurfaceTintCount );
+		float surfaceTintInfluence = max( surfaceTintInfluences.x, surfaceTintInfluences.y );
+		float surfaceLuminance = dot( l_115.xyz, float3( 0.2126, 0.7152, 0.0722 ) );
+		float3 tintedSurface = g_vWaterSurfaceTintColor.rgb * lerp( 0.55, 1.25, saturate( surfaceLuminance ) );
+		float surfaceTintBlend = saturate( surfaceTintInfluence * g_vWaterSurfaceTintColor.a );
+
+		m.Albedo = lerp( l_115.xyz, tintedSurface, surfaceTintBlend );
 		m.Opacity = l_131;
 		m.Roughness = 1;
 		m.Metalness = 0;
