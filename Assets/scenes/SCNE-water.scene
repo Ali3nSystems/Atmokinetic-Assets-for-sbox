@@ -90,7 +90,7 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Water",
-      "Position": "-727.443787,-4740.56104,-498.85199",
+      "Position": "-727.443787,-4646.1377,-498.85199",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
       "Tags": "water",
@@ -173,12 +173,12 @@
           "WaterRipplesRefractionB": 0.05,
           "WaterRipplesRotationA": 0,
           "WaterRipplesRotationB": 180,
-          "WaterRipplesScaleA": 0.01,
-          "WaterRipplesScaleB": 0.01,
-          "WaterRipplesSpeedA": 0.1,
-          "WaterRipplesSpeedB": 0.1,
-          "WaterRipplesTextureA": "textures/tex-water_ripples.vtex",
-          "WaterRipplesTextureB": "textures/tex-water_ripples.vtex",
+          "WaterRipplesScaleA": 0.0075,
+          "WaterRipplesScaleB": 0.0075,
+          "WaterRipplesSpeedA": 0.075,
+          "WaterRipplesSpeedB": 0.075,
+          "WaterRipplesTextureA": "textures/tex-water_ripples_1.vtex",
+          "WaterRipplesTextureB": "textures/tex-water_ripples_2.vtex",
           "WaterShorelineFade": 2,
           "WaterSimulationConstantTime": 0.75,
           "WaterSimulationDisplacement": 0.5,
@@ -388,52 +388,6 @@
           "Children": []
         },
         {
-          "__guid": "569cd2e0-feae-471f-94e4-42fbe7619270",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "tile_-1_1",
-          "Position": "-88.5826416,265.748047,196.850403",
-          "Rotation": "0,0,-0.707106769,0.707106769",
-          "Scale": "4.5,4.5,4.5",
-          "Tags": "reflection",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Sandbox.ModelRenderer",
-              "__guid": "f240224a-1769-4438-a03e-3cac54f87e76",
-              "__enabled": true,
-              "Flags": 0,
-              "BodyGroups": 256,
-              "CreateAttachments": false,
-              "LodOverride": null,
-              "MaterialGroup": null,
-              "MaterialOverride": null,
-              "Materials": null,
-              "Model": "models/mdl-water_tile.vmdl",
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "RenderOptions": {
-                "GameLayer": true,
-                "OverlayLayer": false,
-                "BloomLayer": false,
-                "AfterUILayer": false
-              },
-              "RenderType": "On",
-              "Tint": "1,1,1,1"
-            }
-          ],
-          "Children": []
-        },
-        {
           "__guid": "a0932d7d-9a3f-4683-ac61-c79dc3ab00c4",
           "__version": 2,
           "Flags": 0,
@@ -544,52 +498,6 @@
             {
               "__type": "Sandbox.ModelRenderer",
               "__guid": "c8d1eb86-307e-4f82-ac9d-1ba49f9616ae",
-              "__enabled": true,
-              "Flags": 0,
-              "BodyGroups": 256,
-              "CreateAttachments": false,
-              "LodOverride": null,
-              "MaterialGroup": null,
-              "MaterialOverride": null,
-              "Materials": null,
-              "Model": "models/mdl-water_tile.vmdl",
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "RenderOptions": {
-                "GameLayer": true,
-                "OverlayLayer": false,
-                "BloomLayer": false,
-                "AfterUILayer": false
-              },
-              "RenderType": "On",
-              "Tint": "1,1,1,1"
-            }
-          ],
-          "Children": []
-        },
-        {
-          "__guid": "f96f831e-1ff5-4c01-86ef-2b7496ce8d20",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "tile_0_1",
-          "Position": "88.5827026,265.748047,196.850403",
-          "Rotation": "0,0,-0.707106769,0.707106769",
-          "Scale": "4.5,4.5,4.5",
-          "Tags": "reflection",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Sandbox.ModelRenderer",
-              "__guid": "eaf8977c-662e-41b3-b133-dba4043d137f",
               "__enabled": true,
               "Flags": 0,
               "BodyGroups": 256,
@@ -754,52 +662,6 @@
             }
           ],
           "Children": []
-        },
-        {
-          "__guid": "3f69c5da-3edf-4c17-a22d-447b545efe6a",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "tile_1_1",
-          "Position": "265.748016,265.748047,196.850403",
-          "Rotation": "0,0,-0.707106769,0.707106769",
-          "Scale": "4.5,4.5,4.5",
-          "Tags": "reflection",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Sandbox.ModelRenderer",
-              "__guid": "5c8fc41d-4ce5-48a3-ad83-7716c87bba08",
-              "__enabled": true,
-              "Flags": 0,
-              "BodyGroups": 256,
-              "CreateAttachments": false,
-              "LodOverride": null,
-              "MaterialGroup": null,
-              "MaterialOverride": null,
-              "Materials": null,
-              "Model": "models/mdl-water_tile.vmdl",
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "RenderOptions": {
-                "GameLayer": true,
-                "OverlayLayer": false,
-                "BloomLayer": false,
-                "AfterUILayer": false
-              },
-              "RenderType": "On",
-              "Tint": "1,1,1,1"
-            }
-          ],
-          "Children": []
         }
       ]
     },
@@ -879,25 +741,6 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null
-        },
-        {
-          "__type": "Sandbox.Bloom",
-          "__guid": "78a93934-b6dd-45ef-90d3-d5a3807f5a9a",
-          "__enabled": true,
-          "Flags": 0,
-          "__version": 1,
-          "Filter": "Biquadratic",
-          "Gamma": 2.2,
-          "Mode": "Additive",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "Strength": 10,
-          "Threshold": 0.25,
-          "Tint": "1,1,1,1"
         }
       ],
       "Children": []
@@ -1069,7 +912,7 @@
     "GameObjectSystems": {
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
-          "$blob": "dcda8676-50fa-4eee-91f2-27d123bea4e4"
+          "$blob": "64db792e-5935-8fbc-8cfa-050cd49fa7fd"
         }
       },
       "Sandbox.SelectionSetsSystem": {
