@@ -2,7 +2,7 @@
   "Images": null,
   "Sequences": [
     {
-      "Source": "textures/tex-water_ripples.png",
+      "Source": "textures/tex-water_ripples_2.png",
       "IsLooping": true,
       "FlipBook": false,
       "Columns": 0,
